@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Juliana System</title>
+<link href="../css/Main.css" rel="stylesheet">
+<!-- Import font google -->
+<link href="https://fonts.googleapis.com/css?family=Barlow:400,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
+<!-- Import bootstrap -->
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<!-- Import font awesome -->
+<link rel="stylesheet" href="./css/font-awesome.min.css">
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" 
+rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" 
+crossorigin="anonymous">
+</head>
+<body>
+<div class="sidebar-left">
+	<div class="logo">
+		<img src="../images.jpg" />  
+	</div>
+	<ul class="category">
+		<li><a href="../index.html">NhanDien</a></li>
+		<li><a href="../room_access_duration.html">room-access-permission</a></li>
+		<li><a href="../room_accessed_history.html">room-accessed-history</a></li>
+		<li><a href="../rooms.html">rooms</a></li>
+		<li><a href="./users.html" class="category-active">users</a></li>
+	</ul>
+</div>		
+	<div class="sidebar-right">
+<div class="toolbar">
+	<p class="flash-message alert"> 
+		<strong>
+			
+		</strong>
+    </p>
+    <ul>
+    	<li><i class="fa fa-user"></i></li>
+    	<li><i class="fa fa-bell"></i></li>
+    	<li><i class="fa fa-globe"></i></li>
+    	<li><img src="../ava.png"></li>
+    </ul>
+</div>
+		<div class="dashboard">
+			<div class="title">
+				<div class="title-left">
+					<h2>users</h2>
+				</div>
+				<div class="title-search">
+				    <!-- <html:form action="/searchMay" method="GET">
+				    	<input type="text" name="search">
+				    	<button type="submit"><i class="fa fa-search"></i></button>
+		            </html:form> -->
+				</div>
+				<div class="title-right">
+					<a href="./createUser.html">Create User</a>
+				</div>
+			</div>
+			<table>
+				<tr>
+					<th>displayName</th>
+					<th>firstName</th>
+					<th>lastName</th>
+					<th>role</th>
+					<th>hasAddedFace</th>
+					<th>imageUrl</th>
+					<th>Action</th>
+				</tr>
+			</table>
+		</div>
+	</div>	
+<footer>
+	<p>Copyright 2019@ Design by BaoPDG</p>
+</footer>
+<div class="popup-delete">
+	<div class="popup-delete-dialog">
+		<span>X</span>
+		<div class="popup-delete-title">
+			<h5>Are you want to delete <strong></strong>?</h5>
+		</div>
+		<div class="popup-delete-content">
+			<button type="button" class="btn btn-default yes"><a href="javascript:void(0);">Yes</a></button>
+			<button type="button" class="btn btn-default no">No</button>
+		</div>
+	</div>
+</div>
+<script src="../js/jquery-3.4.1.js"></script>
+<script src="../js/jquery-ui.js"></script>
+<script src="../js/jquery-validate.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
+<!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
+
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase.js"></script>
+<script src="../js/index.js"></script>
+<script>
+	  // Set the configuration for your app
+  // TODO: Replace with your app's config object
+	function popupDelete(){
+		$("button.btn-danger").on("click",function(){
+			$(".popup-delete").fadeIn();
+			var src = $(this).data("src");
+			var del = $(this).data("del");
+			$(".popup-delete .btn-default.yes > a").attr("href",src);
+			$(".popup-delete-title > h5 > strong").text(del);
+			$(".popup-delete-content .btn-default").off("click");
+			$(".popup-delete-content .btn-default.no").on("click",function(){
+				$(".popup-delete").fadeOut();
+			});
+			$(".popup-delete-content .btn-default.yes").on("click",function(){
+				db.collection("users").doc(del).delete().then(function() {
+					location.reload();
+				}).catch(function(error) {
+					console.error("Error removing document: ", error);
+				});
+			});
+		});
+		$(".popup-delete  span").on("click",function(){
+			$(".popup-delete").fadeOut();
+		});
+	}
+	var firebaseConfig = {
+		apiKey: 'AIzaSyAXuNfsblJLmwFcXWLJh0cGUTBUDcQMpng',
+		authDomain: 'building-tracking-system.firebaseapp.com',
+		projectId: 'building-tracking-system',
+		databaseURL: 'https://building-tracking-system.firebaseio.com',
+		storageBucket: 'building-tracking-system.appspot.com'
+	};
+	firebase.initializeApp(firebaseConfig);
+
+	// Get a reference to the storage service, which is used to create references in your storage bucket
+	const db = firebase.firestore();
+	var fields = "";
+	var displayName = "";
+	var firstName = "";
+	var lastName = "";
+	var role = "";
+	var hasAddedFace = "";
+	var imageUrl = "";
+	var action = "";
+	db.collection('users').get().then((snapshot) => {
+		snapshot.docs.forEach(doc => {
+			displayName = "<td>"+doc.data().displayName+"</td>";
+			firstName = "<td>"+doc.data().firstName+"</td>";
+			lastName = "<td>"+doc.data().lastName+"</td>";
+			role = "<td>"+doc.data().role+"</td>";
+			hasAddedFace = "<td>"+doc.data().hasAddedFace+"</td>";
+			imageUrl = "<td><a href='"+doc.data().imageUrl+"' target='_blank'><img with='45' height='45' src='"+doc.data().imageUrl+"'></a></td>";
+			action = `<td><button type="button" class="btn btn-primary">
+		                		<a href="./editUser.html?displayName=`+doc.data().displayName+`">
+		                			Edit
+		                		</a>
+				    		</button>
+				    		<button type="button" class="btn btn-danger"
+						    data-del="`+doc.id+`" >
+						    	Delete
+						    </button></td>`;
+			fields += "<tr>" + displayName + firstName + lastName + role + hasAddedFace + imageUrl + action +"</tr>";
+		})
+		$(".dashboard table").append(fields);
+		popupDelete();
+	})
+</script>
+</body>
+</html>

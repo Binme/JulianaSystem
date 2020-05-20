@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Juliana System</title>
+<link href="./css/Main.css" rel="stylesheet">
+<!-- Import font google -->
+<link href="https://fonts.googleapis.com/css?family=Barlow:400,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
+<!-- Import bootstrap -->
+<link rel="stylesheet" href="./css/bootstrap.min.css">
+<!-- Import font awesome -->
+<link rel="stylesheet" href="./css/font-awesome.min.css">
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" 
+rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" 
+crossorigin="anonymous">
+</head>
+<body>
+<div class="sidebar-left">
+	<div class="logo">
+		<img src="./images.jpg" />  
+	</div>
+	<ul class="category">
+		<li><a href="./index.html">NhanDien</a></li>
+		<li><a href="./room_access_duration.html">room-access-permission</a></li>
+		<li><a href="./room_accessed_history.html">room-accessed-history</a></li>
+		<li><a href="./rooms.html" class="category-active">rooms</a></li>
+		<li><a href="user/users.html">users</a></li>
+	</ul>
+</div>		
+	<div class="sidebar-right">
+<div class="toolbar">
+	<p class="flash-message alert"> 
+		<strong>
+			
+		</strong>
+    </p>
+    <ul>
+    	<li><i class="fa fa-user"></i></li>
+    	<li><i class="fa fa-bell"></i></li>
+    	<li><i class="fa fa-globe"></i></li>
+    	<li><img src="./ava.png"></li>
+    </ul>
+</div>
+		<div class="dashboard">
+			<h2>rooms</h2>
+			<table>
+				<tr>
+					<th>name</th>
+					<th>doorStatus</th>
+					<th>roomStatus</th>
+					<th>histories</th>
+				</tr>
+				<!-- <tr>
+					<td scope="row">
+						
+					</td>
+					<td>
+						
+					</td>
+					<td>
+						
+					</td>
+					<td>
+						
+					</td>
+				</tr> -->
+			</table>
+		</div>
+	</div>	
+<footer>
+	<p>Copyright 2019@ Design by BaoPDG</p>
+</footer>
+<div class="popup-delete">
+	<div class="popup-delete-dialog">
+		<span>X</span>
+		<div class="popup-delete-title">
+			<h5>Are you want to delete <strong></strong>?</h5>
+		</div>
+		<div class="popup-delete-content">
+			<button type="button" class="btn btn-default yes"><a href="javascript:void(0);">Yes</a></button>
+			<button type="button" class="btn btn-default no">No</button>
+		</div>
+	</div>
+</div>
+<script src="./js/jquery-3.4.1.js"></script>
+<script src="./js/jquery-ui.js"></script>
+<script src="./js/jquery-validate.js"></script>
+<!-- <script src="/__/firebase/7.14.2/firebase-app.js"></script> -->
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
+<!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
+
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase.js"></script>
+<script>
+	  // Set the configuration for your app
+  // TODO: Replace with your app's config object
+  var firebaseConfig = {
+    apiKey: 'AIzaSyAXuNfsblJLmwFcXWLJh0cGUTBUDcQMpng',
+	authDomain: 'building-tracking-system.firebaseapp.com',
+	projectId: 'building-tracking-system',
+    databaseURL: 'https://building-tracking-system.firebaseio.com',
+    storageBucket: 'building-tracking-system.appspot.com'
+  };
+  firebase.initializeApp(firebaseConfig);
+
+	// Get a reference to the storage service, which is used to create references in your storage bucket
+	const db = firebase.firestore();
+	var fields = "";
+	var name = "";
+	var doorStatus = "";
+	var roomStatus = "";
+	var histories = "";
+	db.collection('rooms').get().then((snapshot) => {
+		snapshot.docs.forEach(doc => {
+			name = "<td>"+doc.data().name+"</td>";
+			doorStatus = "<td>"+doc.data().doorStatus+"</td>";
+			roomStatus = "<td>"+doc.data().roomStatus+"</td>";
+			histories = "<td>"+doc.data().histories+"</td>";
+			fields += "<tr>" + name + doorStatus + roomStatus + histories + "</tr>";
+		})
+		$(".dashboard table").append(fields);
+	})
+</script>
+<!-- <script src="./js/index.js"></script> -->
+</body>
+</html>
