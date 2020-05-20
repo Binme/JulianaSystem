@@ -103,7 +103,8 @@ crossorigin="anonymous">
 		snapshot.docs.forEach(doc => {
 			roomId = "<td>"+doc.data().roomId+"</td>";
 			userId = "<td>"+doc.data().userId+"</td>";
-			accessedAt = "<td>"+doc.data().accessedAt.toDate()+"</td>";
+			// accessedAt = "<td>"+doc.data().accessedAt.toDate()+"</td>";
+			accessedAt = "<td>"+doc.data().accessedAt+"</td>";
 			fields += "<tr>" + roomId + userId + accessedAt + "</tr>";
 		})
 		$(".dashboard table").append(fields);

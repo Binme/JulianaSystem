@@ -49,12 +49,8 @@ crossorigin="anonymous">
 					<h2>Create User</h2>
                 </div>
                 <form action="">
-                    <label>Doc: </label>
-                    <input type="text" name="docu">
-		            <label>userId: </label>
-                    <input type="text" name="userId">
-                    <label>password: </label>
-                    <input type="password" name="passwd">
+                    <label>displayName: </label>
+                    <input type="text" name="displayName">
                     <label>firstName: </label>
                     <input type="text" name="firstName">
                     <label>lastName: </label>
@@ -116,19 +112,16 @@ crossorigin="anonymous">
     const db = firebase.firestore();
     $(".form-may input[type=submit]").on("click",function(e){
         e.preventDefault();
-        var docu = $(".form-may input[name=docu]").val();
-        var userId = $(".form-may input[name=userId]").val();
-        var password = $(".form-may input[name=passwd]").val();
+        var displayName = $(".form-may input[name=displayName]").val();
         var firstName = $(".form-may input[name=firstName]").val();
         var lastName = $(".form-may input[name=lastName]").val();
         var role = $(".form-may input[name=role]").val();
         var hasAddedFace = Boolean(parseInt($(".form-may select[name=hasAddedFace]").val()));
         var imageUrl = $(".form-may input[name=imageUrl]").val();
 
-        var userRef = db.collection('users').doc(docu);
+        var userRef = db.collection('users').doc();
         var setUser = {
-            userId: userId,
-            password: password,
+            displayName: displayName,
             firstName: firstName,
             lastName: lastName,
             role: role,

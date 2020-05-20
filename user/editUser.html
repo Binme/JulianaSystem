@@ -112,14 +112,16 @@ crossorigin="anonymous">
 
     var url_string = location.href; //window.location.href
     var url = new URL(url_string);
-    var c = url.searchParams.get("displayName");
+    var c = url.searchParams.get("id");
     var docRef = db.collection("users").doc(c);
+    var collect_user = "";
 
     db.collection('users').get().then((snapshot) => {
 		snapshot.docs.forEach(doc => { 
             // console.log(c);
             // console.log(doc.displayName);
-			if( doc.data().displayName == c ){
+			if( doc.id == c ){
+                collect_user = doc.id;
                 $(".form-may input[name=displayName]").val(doc.data().displayName);
                 $(".form-may input[name=firstName]").val(doc.data().firstName);
                 $(".form-may input[name=lastName]").val(doc.data().lastName);
@@ -145,7 +147,7 @@ crossorigin="anonymous">
         var hasAddedFace = Boolean(parseInt($(".form-may select[name=hasAddedFace]").val()));
         var imageUrl = $(".form-may input[name=imageUrl]").val();
         
-        var userRef = db.collection('users').doc(displayName);
+        var userRef = db.collection('users').doc(collect_user);
         var setUser = {
             displayName: displayName,
             firstName: firstName,

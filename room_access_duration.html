@@ -44,15 +44,25 @@ crossorigin="anonymous">
     </ul>
 </div>
 		<div class="dashboard">
-			<h2>room-access-duration</h2>
+			<div class="title">
+				<div class="title-left">
+					<h2>Permission</h2>
+				</div>
+				<div class="title-search">
+				</div>
+				<div class="title-right">
+					<a href="./createPer.html">Create Permission</a>
+				</div>
+			</div>
 			<table>
 				<tr>
 					<th>roomId</th>
 					<th>userId</th>
-					<th>assignedBy</th>
+					<th>createdBy</th>
 					<th>status</th>
-					<th>startTime</th>
-					<th>endTime</th>
+					<th>startAt</th>
+					<th>endAt</th>
+					<th>Action</th>
 				</tr>
 			</table>
 		</div>
@@ -85,6 +95,29 @@ crossorigin="anonymous">
 <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase.js"></script>
 <script>
+	function popupDelete(){
+		$("button.btn-danger").on("click",function(){
+			$(".popup-delete").fadeIn();
+			var src = $(this).data("src");
+			var del = $(this).data("del");
+			$(".popup-delete .btn-default.yes > a").attr("href",src);
+			$(".popup-delete-title > h5 > strong").text(del);
+			$(".popup-delete-content .btn-default").off("click");
+			$(".popup-delete-content .btn-default.no").on("click",function(){
+				$(".popup-delete").fadeOut();
+			});
+			$(".popup-delete-content .btn-default.yes").on("click",function(){
+				db.collection("room-access-permission").doc(del).delete().then(function() {
+					location.reload();
+				}).catch(function(error) {
+					console.error("Error removing document: ", error);
+				});
+			});
+		});
+		$(".popup-delete  span").on("click",function(){
+			$(".popup-delete").fadeOut();
+		});
+	}
 	  // Set the configuration for your app
   // TODO: Replace with your app's config object
   var firebaseConfig = {
@@ -102,20 +135,31 @@ crossorigin="anonymous">
 	var roomId = "";
 	var userId = "";
 	var createdBy = "";
-	var isActive = "";
+	var status = "";
 	var startAt = "";
 	var endAt = "";
+	var action = "";
 	db.collection('room-access-permission').get().then((snapshot) => {
 		snapshot.docs.forEach(doc => {
 			roomId = "<td>"+doc.data().roomId+"</td>";
 			userId = "<td>"+doc.data().userId+"</td>";
 			createdBy = "<td>"+doc.data().createdBy+"</td>";
-			isActive = "<td>"+doc.data().isActive+"</td>";
+			status = "<td>"+doc.data().status+"</td>";
 			startAt = "<td>"+doc.data().startAt+"</td>";
 			endAt = "<td>"+doc.data().endAt+"</td>";
-			fields += "<tr>" + roomId + userId + createdBy + isActive + startAt + endAt + "</tr>";
+			action = `<td><button type="button" class="btn btn-primary">
+		                		<a href="./editPer.html?id=`+doc.id+`">
+		                			Edit
+		                		</a>
+				    		</button>
+				    		<button type="button" class="btn btn-danger"
+						    data-del="`+doc.id+`" >
+						    	Delete
+						    </button></td>`;
+			fields += "<tr>" + roomId + userId + createdBy + status + startAt + endAt + action + "</tr>";
 		})
 		$(".dashboard table").append(fields);
+		popupDelete();
 	})
 </script>
 <!-- <script src="./js/index.js"></script> -->
