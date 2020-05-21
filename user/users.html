@@ -49,10 +49,6 @@ crossorigin="anonymous">
 					<h2>users</h2>
 				</div>
 				<div class="title-search">
-				    <!-- <html:form action="/searchMay" method="GET">
-				    	<input type="text" name="search">
-				    	<button type="submit"><i class="fa fa-search"></i></button>
-		            </html:form> -->
 				</div>
 				<div class="title-right">
 					<a href="./createUser.html">Create User</a>
@@ -60,10 +56,13 @@ crossorigin="anonymous">
 			</div>
 			<table>
 				<tr>
+					<th>userId</th>
 					<th>displayName</th>
-					<th>firstName</th>
-					<th>lastName</th>
 					<th>role</th>
+					<th>isActive</th>
+					<th>email</th>
+                    <th>firstName</th>
+					<th>lastName</th>
 					<th>hasAddedFace</th>
 					<th>imageUrl</th>
 					<th>Action</th>
@@ -135,22 +134,36 @@ crossorigin="anonymous">
 
 	// Get a reference to the storage service, which is used to create references in your storage bucket
 	const db = firebase.firestore();
-	var fields = "";
-	var displayName = "";
-	var firstName = "";
-	var lastName = "";
-	var role = "";
-	var hasAddedFace = "";
-	var imageUrl = "";
-	var action = "";
+    // <th>userId</th>
+	// 				<th>displayName</th>
+	// 				<th>role</th>
+	// 				<th>isActive</th>
+	// 				<th>email</th>
+    //                 <th>firstName</th>
+	// 				<th>lastName</th>
+	// 				<th>hasAddedFace</th>
+	// 				<th>imageUrl</th>
+    var fields = "";
 	db.collection('users').get().then((snapshot) => {
 		snapshot.docs.forEach(doc => {
-			displayName = "<td>"+doc.data().displayName+"</td>";
-			firstName = "<td>"+doc.data().firstName+"</td>";
-			lastName = "<td>"+doc.data().lastName+"</td>";
-			role = "<td>"+doc.data().role+"</td>";
-			hasAddedFace = "<td>"+doc.data().hasAddedFace+"</td>";
-			imageUrl = "<td><a href='"+doc.data().imageUrl+"' target='_blank'><img with='45' height='45' src='"+doc.data().imageUrl+"'></a></td>";
+            var userId = (doc.data().userId !== undefined &&  doc.data().userId !== "unknown") ? doc.data().userId : "";
+            var displayName = (doc.data().displayName !== undefined &&  doc.data().displayName !== "unknown") ? doc.data().displayName : "";
+            var role = (doc.data().role !== undefined &&  doc.data().role !== "unknown") ? doc.data().role : "";
+            var isActive = (doc.data().isActive !== undefined &&  doc.data().isActive !== "unknown") ? doc.data().isActive : "";
+            var email = (doc.data().email !== undefined &&  doc.data().email !== "unknown") ? doc.data().email : "";
+            var firstName = (doc.data().firstName !== undefined &&  doc.data().firstName !== "unknown") ? doc.data().firstName : "";
+            var lastName = (doc.data().lastName !== undefined &&  doc.data().lastName !== "unknown") ? doc.data().lastName : "";
+            var hasAddedFace = (doc.data().hasAddedFace !== undefined &&  doc.data().hasAddedFace !== "unknown") ? doc.data().hasAddedFace : "";
+            var imageUrl = (doc.data().imageUrl !== undefined &&  doc.data().imageUrl !== "unknown") ? doc.data().imageUrl : "";
+			userId = "<td>"+userId+"</td>";
+			displayName = "<td>"+displayName+"</td>";
+            role = "<td>"+role+"</td>";
+			isActive = "<td>"+isActive+"</td>";
+			email = "<td>"+email+"</td>";
+			firstName = "<td>"+firstName+"</td>";
+			lastName = "<td>"+lastName+"</td>";
+			hasAddedFace = "<td>"+hasAddedFace+"</td>";
+			imageUrl = "<td><a href='"+imageUrl+"' target='_blank'><img with='45' height='45' src='"+doc.data().imageUrl+"'></a></td>";
 			action = `<td><button type="button" class="btn btn-primary">
 		                		<a href="./editUser.html?id=`+doc.id+`">
 		                			Edit
@@ -160,7 +173,7 @@ crossorigin="anonymous">
 						    data-del="`+doc.id+`" >
 						    	Delete
 						    </button></td>`;
-			fields += "<tr>" + displayName + firstName + lastName + role + hasAddedFace + imageUrl + action +"</tr>";
+			fields += "<tr>" + userId + displayName + role + isActive + email + firstName + lastName + hasAddedFace + imageUrl + action +"</tr>";
 		})
 		$(".dashboard table").append(fields);
 		popupDelete();
